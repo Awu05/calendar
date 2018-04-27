@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func handleCellTextColor(view: JTAppleCell, cellState: CellState) {
+    func handleCellTextColor(view: JTAppleCell?, cellState: CellState) {
         guard let validCell = view as? CustomCell else { return }
         
         if validCell.isSelected {
@@ -51,7 +51,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func handleCellSelected(view: JTAppleCell, cellState: CellState) {
+    func handleCellSelected(view: JTAppleCell?, cellState: CellState) {
         guard let validCell = view as? CustomCell else { return }
         
         if validCell.isSelected {
@@ -114,13 +114,13 @@ extension ViewController: JTAppleCalendarViewDelegate {
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        handleCellSelected(view: cell!, cellState: cellState)
-        handleCellTextColor(view: cell!, cellState: cellState)
+        handleCellSelected(view: cell, cellState: cellState)
+        handleCellTextColor(view: cell, cellState: cellState)
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        handleCellSelected(view: cell!, cellState: cellState)
-        handleCellTextColor(view: cell!, cellState: cellState)
+        handleCellSelected(view: cell, cellState: cellState)
+        handleCellTextColor(view: cell, cellState: cellState)
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
