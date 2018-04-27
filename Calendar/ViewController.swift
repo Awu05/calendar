@@ -24,8 +24,31 @@ class ViewController: UIViewController {
     }
 
     func setupCalendarView() {
+        //Setup calendar spacing
         calendarView.minimumLineSpacing = 0
         calendarView.minimumInteritemSpacing = 0
+        
+        //Setup labels
+        calendarView.visibleDates {(visibleDates) in
+            self.setupViewsOfCalendar(from: visibleDates)
+        }
+    }
+    
+    func handleCellTextColor(view: JTAppleCell, cellState: CellState) {
+        guard let validCell = view as? CustomCell else { return }
+        
+        if validCell.isSelected {
+            //Date that is selected is light gray
+            validCell.dateLabel.textColor = UIColor(red:0.75, green:0.75, blue:0.75, alpha:1.0)
+        } else {
+            if cellState.dateBelongsTo == .thisMonth {
+                //Dates that belong to the current month are black
+                validCell.dateLabel.textColor = UIColor(red:0.00, green:0.00, blue:0.00, alpha:1.0)
+            } else {
+                //Dates that do not belong to the current month are gray
+                validCell.dateLabel.textColor = UIColor(red:0.44, green:0.44, blue:0.44, alpha:1.0)
+            }
+        }
     }
     
     func handleCellSelected(view: JTAppleCell, cellState: CellState) {
@@ -36,7 +59,16 @@ class ViewController: UIViewController {
         } else {
             validCell.selectedView.isHidden = true
         }
+    }
+    
+    func setupViewsOfCalendar(from visibleDates: DateSegmentInfo) {
+        let date = visibleDates.monthDates.first!.date
         
+        formatter.dateFormat = "yyyy"
+        yearLbl.text = formatter.string(from: date)
+        
+        formatter.dateFormat = "MMMM"
+        monthLbl.text = formatter.string(from: date)
     }
     
     override func didReceiveMemoryWarning() {
@@ -76,16 +108,23 @@ extension ViewController: JTAppleCalendarViewDelegate {
         cell.dateLabel.text = cellState.text
         
         handleCellSelected(view: cell, cellState: cellState)
+        handleCellTextColor(view: cell, cellState: cellState)
         
         return cell
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
         handleCellSelected(view: cell!, cellState: cellState)
+        handleCellTextColor(view: cell!, cellState: cellState)
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
         handleCellSelected(view: cell!, cellState: cellState)
+        handleCellTextColor(view: cell!, cellState: cellState)
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
+        setupViewsOfCalendar(from: visibleDates)
     }
 }
 
